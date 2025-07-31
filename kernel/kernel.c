@@ -8,7 +8,12 @@ void set_framebuffer(uint32_t* fb);
 void draw_desktop(void);
 
 
-__attribute__((section(".boot"), aligned(4), used))
+/*
+ * Place the multiboot header in the dedicated ".multiboot" section so that
+ * GRUB can detect it. Without this, the loader will return to the menu as it
+ * cannot find a valid multiboot header within the first 8KiB of the kernel.
+ */
+__attribute__((section(".multiboot"), aligned(4), used))
 const struct linux_boot_header boot_header = {
     .magic = LINUX_BOOT_MAGIC,
     .flags = LINUX_BOOT_FLAG_MEMORY_INFO | LINUX_BOOT_FLAG_VIDEO_MODE,
